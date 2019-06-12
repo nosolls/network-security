@@ -213,3 +213,58 @@ requested by the format string from the stack.
 printf ("a has value %d, b has value %d, c is at address: %08x\n",
   a, b, &c);
 ```
+
+({{ page.root }}/fig/formatstring/stackandformatstrings.png)
+
+#### What if there is a miss-match?
+What if there is a miss-match between the format string and the actual arguments?
+
+```bash
+printf ("a has value %d, b has value %d, c is at address: %08x\n",
+  a, b);
+```
+* In the above example, the format string asks for 3 arguments, but the program actually provides only two (i.e. a and b).
+* Can this program pass the compiler?
+  * The function printf() is defined as function with variable length of arguments. Therefore, by looking at the number of arguments, everything looks fine.
+  * To find the miss-match, compilers needs to understand how printf() works and what the meaning of the format string is. However, compilers usually do not do this kind of analysis.
+  * Sometimes, the format string is not a constant string, it is generated during the execution of the program. Therefore, there is no way for the compiler to find the miss-match in this case.
+* Can printf() detect the miss-match?
+  * The function printf() fetches the arguments from the stack. If the format string needs 3 arguments, it will fetch 3 data items from the stack. Unless the stack is marked with a boundary, printf() does not know that it runs out of the arguments that are provided to it.
+  * Since there is no such a marking. printf() will continue fetching data from the stack. In a miss-match case, it will fetch some data that do not belong to this function call.
+* What trouble can be caused by printf() when it starts to fetch data that is meant for it?
+#### Viewing Memory at Any Location
+
+* We have to supply an address of the memory. However, we cannot change the code: we can only supply the format string.
+* If we use printf(%s) without specifying a memory address, the target address will be obtained from the stack anyway by the printf() function. The function maintains an initial stack pointer, so it knows the location of the parameters in the stack.
+* Observation: the format string is usually located on the stack. If we can encode the target address in the format string, the target address will be in the stack. In the following example, the format string is stored in a buffer, which is located on the stack.
+
+```C
+int main(int argc, char *argv[])
+{
+  char user_input[100];
+  ... ... /* other variable definitions and statements */
+  scanf("%s", user_input); /* getting a string from user */
+  printf(user_input); /* Vulnerable place */
+  return 0;
+}
+```
+
+* If we can force the printf to obtain the address from the format string (also on the stack), we can control the address.
+
+```C
+printf ("\x10\x01\x48\x08 %x %x %x %x %s");
+```
+
+* \x10\x01\x48\x08 are the four bytes of the target address. In C language, \x10 in a string tells the compiler to put a hexadecimal value 0x10 in the current position. The value will take up just one byte.  Without using \x, if we directly put "10" in a string, the ASCII values of the characters ’1’ and ’0’ will be stored. Their ASCII values are 49 and 48, respectively.
+* %x causes the stack pointer to move towards the format string.
+* Here is how the attack works if user_input[] contains the following format string:
+
+```C
+"\x10\x01\x48\x08 %x %x %x %x %s"
+```
+
+({{ page.root }}/fig/formatstring/viewingmemory.png)
+
+* Basically, we use four %x to move the printf()’s pointer towards the address that we stored in the format string. Once we reach the destination, we will give %s to print(), causing it to print out the contents in the memory address 0x10014808. The function printf() will treat the contents as a string, and print out the string until reaching the end of the string (i.e. 0).
+* The stack space between user_input[] and the address passed to the printf() function is not for printf(). However,  because of the format-string vulnerability in the program, printf() considers them as the arguments to match with the %x in the format string.
+* The key challenge in this attack is to figure out the distance between the user_input[] and the address passed to the printf() function.  This distance decides how many %x you need to insert into the format string, before giving %s.
