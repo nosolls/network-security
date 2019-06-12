@@ -205,4 +205,11 @@ table summarizes these format parameters:
 | %s | string ((const) (unsigned) char * ) | reference |
 | %n | number of bytes written so far, (* int) | reference |
 
-# The stack and Format Strings
+#### The Stack and Format Strings
+The behavior of the format function is controlled by the format string. The function retrieves the parameters
+requested by the format string from the stack.
+
+```bash
+printf ("a has value %d, b has value %d, c is at address: %08x\n",
+  a, b, &c);
+```
