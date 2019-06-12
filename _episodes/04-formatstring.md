@@ -28,6 +28,8 @@ a scheme to exploit the vulnerability.  In addition to the attacks, students wil
 a protection scheme that can be used to defeat this type of attacks.  Students need to evaluate whether the
 scheme work or not and explain why.
 
+This lab/documentation was provided by the [SEED Project](https://seedsecuritylabs.org/).
+
 ### Demonstration
 
 #### Task 1: Exploit the vulnerability
