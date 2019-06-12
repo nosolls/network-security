@@ -268,3 +268,18 @@ printf ("\x10\x01\x48\x08 %x %x %x %x %s");
 * Basically, we use four %x to move the printf()’s pointer towards the address that we stored in the format string. Once we reach the destination, we will give %s to print(), causing it to print out the contents in the memory address 0x10014808. The function printf() will treat the contents as a string, and print out the string until reaching the end of the string (i.e. 0).
 * The stack space between user_input[] and the address passed to the printf() function is not for printf(). However,  because of the format-string vulnerability in the program, printf() considers them as the arguments to match with the %x in the format string.
 * The key challenge in this attack is to figure out the distance between the user_input[] and the address passed to the printf() function.  This distance decides how many %x you need to insert into the format string, before giving %s.
+
+#### Writing an Integer to Memory
+* %n: The number of characters written so far is stored into the integer indicated by the corresponding argument.
+```C
+int i;
+printf ("12345%n", &i);
+```
+* It causes printf() to write 5 into variable i.
+* Using the same approach as that for viewing memory at any location, we can cause printf() to write an integer into any location. Just replace the %s in the above example with %n, and the contents at the address 0x10014808 will be overwritten.
+* Using this attack, attackers can do the following:
+  * Overwrite important program flags that control access privileges
+  * Overwrite return addresses on the stack, function pointers, etc.
+* However, the value written is determined by the number of characters printed before the %n is reached. Is it really possible to write arbitrary integer values?
+  * Use dummy output characters.   To write a value of 1000,  a simple padding of 1000 dummy characters would do.
+  * To avoid long format strings, we can use a width specification of the format indicators.
