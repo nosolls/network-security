@@ -36,9 +36,8 @@ Ubuntu to counter against the buffer-overflow attacks. This lab covers the follo
 ### Demonstration
 
 #### Turning off Countermeasures
-You can execute the lab tasks using our pre-built Ubuntu virtual machines. Ubuntu and other Linux
-distributions have implemented several security mechanisms to make the buffer-overflow attack difficult. To simplify
-our attacks, we need to disable them first.
+Ubuntu and other Linux distributions have implemented several security mechanisms to make the buffer-overflow attack 
+difficult. To simplify our attacks, we need to disable them first.
 
 **Address Space Randomization.** Ubuntu and several other Linux-based systems uses address space ran-
 domization [?] to randomize the starting address of heap and stack. This makes guessing the exact addresses
@@ -46,5 +45,14 @@ difficult; guessing addresses is one of the critical steps of buffer-overflow at
 feature using the following command:
 
 ```bash
-$ sudo sysctl -w kernel.randomize_va_space=0
+sudo sysctl -w kernel.randomize_va_space=0
+```
+
+**The StackGuard Protection Scheme.** The GCC compiler implements a security mechanism called Stack-
+Guard to prevent buffer overflows. In the presence of this protection, buffer overflow attacks will not work.
+We can disable this protection during the compilation using the -fno-stack-protector option. For example,
+to compile a program example.c with StackGuard disabled, we can do the following:
+
+```bash
+gcc -fno-stack-protector example.c
 ```
