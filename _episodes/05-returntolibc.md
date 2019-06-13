@@ -22,6 +22,8 @@ In this lab, students are given a program with a buffer-overflow vulnerability; 
 * Address randomization
 * The libc functions
 
+**Readings and related topics.** Detailed coverage of the return-to-libc attack can be found in Chapter 5 of the SEED book, *Computer Security: A Hands-on Approach*, by Wenliang Du. A topic related to this lab is the general buffer-overflow attack, which is covered in a separate SEED lab, as well as in Chapter 4 of the SEED book.
+
 ## Demonstration
 
 ### Turning off Countermeasures
@@ -188,3 +190,20 @@ If you plan to use gdb to conduct your investigation, you should be aware that g
 ## Guidelines
 
 ### Understanding the Stack Layout
+To know how to conduct the Return-to-libc attack, it is essential to understand how the stack works. We use a small C program to understand the effects of a function invocation on the stack. More detailed explanation can be found in the SEED book, *Computer Security: A Hands-on Approach*, by Wenliang Du.
+
+```C
+/* foobar.c */
+#include <stdio.h>
+void foo(int x)
+{
+  printf("Hello world: %d\n", x);
+}
+int main()
+{
+  foo(1);
+  return 0;
+}
+```
+
+We can use "gcc -S foobar.c" to compile this program to the assembly code. The resulting file foobar.s will look like the following:
