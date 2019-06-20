@@ -238,3 +238,12 @@ We can use "gcc -S foobar.c" to compile this program to the assembly code. The r
 35         leal    -4(%ecx), %esp
 36         ret
 ```
+
+### Calling and Entering foo()
+Let us concentrate on the stack while calling foo(). We can ignore the stack before that. Please note that line numbers instead of instruction addresses are used in this explanation.
+
+* **Line 28-29:** These two statements push the value 1, i.e. the argument to the foo(), into the stack. This operation increments %esp by four. The stack after these two statements is depicted in Figure 1(a).
+* **Line 30:** call foo: The statement pushes the address of the next instruction that immediately follows the call statement into the stack (i.e. the return address), and then jumps to the code of foo(). The current stack is depicted in Figure 1(b).
+
+### Leaving foo()
+Now the control has passed to the function foo(). Let's see what happens to the stack when the function returns.
