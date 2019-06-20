@@ -250,3 +250,13 @@ Now the control has passed to the function foo(). Let's see what happens to the 
 
 ({{ page.root }}/fig/returntolibc/figure1.png)
 
+* **Line 16:** leave: This instruction implicitly performs two instructions (it was a macro in earlier x86 releases, but was made into an instruction later):
+
+```assembly
+mov   %ebp, %esp
+pop   %ebp
+```
+The first statement release the stack space allocated for the function; the second statement recover the previous frame pointer. The current stack is depicted in Figure 1(e).
+
+* **Line 17:** ret: This instruction simply pops the return address out of the stack, and then jump to the return address. The current stack is depicted in Figure 1(f).
+* **Line 32:** addl $4, %esp: Further resotre the stack by releasing more memories allocated for foo. As you can clearly see that the stack is now in exactly the same state as it was before entering the function foo (i.e., before line 28).
