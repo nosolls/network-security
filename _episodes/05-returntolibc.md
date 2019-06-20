@@ -247,3 +247,6 @@ Let us concentrate on the stack while calling foo(). We can ignore the stack bef
 
 ### Leaving foo()
 Now the control has passed to the function foo(). Let's see what happens to the stack when the function returns.
+
+({{ page.root }}/fig/returntolibc/figure1.png)
+
