@@ -207,3 +207,34 @@ int main()
 ```
 
 We can use "gcc -S foobar.c" to compile this program to the assembly code. The resulting file foobar.s will look like the following:
+
+```assembly
+......
+8 foo:
+9         pushl   %ebp
+10         movl    %esp, %ebp
+11         subl    $8, %esp
+12         movl    8(%ebp), %eax
+13         movl    %eax, 4(%esp)
+14         movl    $.LC0, (%esp)  : string "Hello world: %d\n"
+15         call    printf
+16         leave
+17         ret
+......
+21 main:
+22         leal    4(%esp), %ecx
+23         andl    $-16, %esp
+24         pushl   -4(%ecx)
+25         pushl   %ebp
+26         movl    %esp, %ebp
+27         pushl   %ecx
+28         subl    $4, %esp
+29         movl    $1, (%esp)
+30         call    foo
+31         movl    $0, %eax
+32         addl    $4, %esp
+33         popl    %ecx
+34         popl    %ebp
+35         leal    -4(%ecx), %esp
+36         ret
+```
