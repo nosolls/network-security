@@ -246,23 +246,3 @@ Let us concentrate on the stack while calling foo(). We can ignore the stack bef
 * **Line 30:** call foo: The statement pushes the address of the next instruction that immediately follows the call statement into the stack (i.e. the return address), and then jumps to the code of foo(). The current stack is depicted in Figure 1(b).
 
 ### Leaving foo()
-Now the control has passed to the function foo(). Let's see what happens to the stack when the function returns.
-
-* **Line 28-29:** These two statements push the value 1, i.e. the argument to the foo(), into the stack. This operation increments %esp by four. The stack after these two statements is depicted in Figure 1(a).
-* **Line 30:** call foo: The statement pushes the address of the next instruction that immediately follows the call statement into the stack (i.e. the return address), and then jumps to the code of foo(). The current stack is depicted in Figure 1(b).
-
-### Leaving foo()
-Now the control has passed to the function foo(). Let's see what happens to the stack when the function returns.
-
-({{ page.root }}/fig/returntolibc/figure1.png)
-
-* **Line 16:** leave: This instruction implicitly performs two instructions (it was a macro in earlier x86 releases, but was made into an instruction later):
-
-```assembly
-mov   %ebp, %esp
-pop   %ebp
-```
-The first statement release the stack space allocated for the function; the second statement recover the previous frame pointer. The current stack is depicted in Figure 1(e).
-
-* **Line 17:** ret: This instruction simply pops the return address out of the stack, and then jump to the return address. The current stack is depicted in Figure 1(f).
-* **Line 32:** addl $4, %esp: Further resotre the stack by releasing more memories allocated for foo. As you can clearly see that the stack is now in exactly the same state as it was before entering the function foo (i.e., before line 28).
