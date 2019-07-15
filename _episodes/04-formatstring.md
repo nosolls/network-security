@@ -8,6 +8,10 @@ questions:
 - "What can you do to prevent this vulnerability?"
 objectives:
 - "Follow instructions to successfully demonstrate the format-string vulnerability."
+keypoints:
+- "Poor programming can lead to big problems."
+- "One vulnerability has a lot of potential to be exploited."
+- "Randomization is key to prevent attacks like this one."
 ---
 
 ## Format String Vulnerability
@@ -95,6 +99,15 @@ sysctl -w kernel.randomize_va_space=0
 ```
 
 After turning off the address randomization, your task is to repeat the same task described in Task 1, but you have to remove the first scanf statement (scanf("%d", int input)) from the vulnerable program.
+
+> Use setarch instead
+>
+> Because we are using containers, you will not be able to change kernel settings. So use the following command instead of systctl (this doesn't require root). It will open a new shell:
+{: .callout}
+
+```bash
+setarch $(uname -m) -R /bin/sh
+```
 
 How to let scanf accept an arbitrary number? Usually, scanf is going to pause for you to type inputs. Sometimes, you want the program to take a number 0x05 (not the character ‘5’). Unfortunately, when you type ‘5’ at the input, scanf actually takes in the ASCII value of ‘5’, which is 0x35, rather than 0x05. The challenge is that in ASCII, 0x05 is not a typable character, so there is no way we can type in this value. One way to solve this problem is to use a file. We can easily write a C program that stores 0x05 (again, not ‘5’) to a file (let us call it mystring), then we can run the vulnerable program (let us call it a.out) with its input being redirected to mystring; namely, we run "a.out < mystring". This way, scanf will take its input from the file mystring, instead of from the keyboard.
 
