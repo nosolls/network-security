@@ -162,7 +162,7 @@ printf ("a has value %d, b has value %d, c is at address: %08x\n",
   a, b, &c);
 ```
 
-({{ page.root }}/fig/formatstring/stackandformatstrings.png)
+![]({{ page.root }}/fig/formatstring/stackandformatstrings.png)
 
 #### What if there is a miss-match?
 What if there is a miss-match between the format string and the actual arguments?
@@ -211,7 +211,7 @@ printf ("\x10\x01\x48\x08 %x %x %x %x %s");
 "\x10\x01\x48\x08 %x %x %x %x %s"
 ```
 
-({{ page.root }}/fig/formatstring/viewingmemory.png)
+![]({{ page.root }}/fig/formatstring/viewingmemory.png)
 
 * Basically, we use four %x to move the printf()’s pointer towards the address that we stored in the format string. Once we reach the destination, we will give %s to print(), causing it to print out the contents in the memory address 0x10014808. The function printf() will treat the contents as a string, and print out the string until reaching the end of the string (i.e. 0).
 * The stack space between user_input[] and the address passed to the printf() function is not for printf(). However,  because of the format-string vulnerability in the program, printf() considers them as the arguments to match with the %x in the format string.
