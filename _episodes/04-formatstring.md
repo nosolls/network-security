@@ -92,22 +92,18 @@ Hints: From the printout, you will find out that secret[0] and secret[1] are loc
 #### Task 2: Memory Randomization
 If the first scanf statement (scanf("%d", int input)) does not exist, i.e., the program does not ask you to enter an integer, the attack in Task 1 become more difficult for those operating systems that have implemented address randomization. Pay attention to the address of secret[0] (or secret[1]). When you run the program once again, will you get the same address?
 
-Address randomization is introduced to make a number of attacks difficult, such as buffer overflow, format string, etc. To appreciate the idea of address randomization, we will turn off the address randomization in this task, and see whether the format string attack on the previous vulnerable program (without the first scanf statement) is still difficult. You can use the following command to turn off the address randomization (note that you need to run it as root):
+Address randomization is introduced to make a number of attacks difficult, such as buffer overflow, format string, etc. To appreciate the idea of address randomization, we will turn off the address randomization in this task, and see whether the format string attack on the previous vulnerable program (without the first scanf statement) is still difficult. You can use the following command to turn off the address randomization:
 
-```bash
-sysctl -w kernel.randomize_va_space=0
-```
-
-After turning off the address randomization, your task is to repeat the same task described in Task 1, but you have to remove the first scanf statement (scanf("%d", int input)) from the vulnerable program.
-
-> Use setarch instead
+> ## Using setarch
 >
-> Because we are using containers, you will not be able to change kernel settings. So use the following command instead of systctl (this doesn't require root). It will open a new shell:
+> Because we are using containers, you will not be able to change kernel settings. This command will disable randomization and open a new shell.
 {: .callout}
 
 ```bash
 setarch $(uname -m) -R /bin/sh
 ```
+
+After turning off the address randomization, your task is to repeat the same task described in Task 1, but you have to remove the first scanf statement (scanf("%d", int input)) from the vulnerable program.
 
 How to let scanf accept an arbitrary number? Usually, scanf is going to pause for you to type inputs. Sometimes, you want the program to take a number 0x05 (not the character ‘5’). Unfortunately, when you type ‘5’ at the input, scanf actually takes in the ASCII value of ‘5’, which is 0x35, rather than 0x05. The challenge is that in ASCII, 0x05 is not a typable character, so there is no way we can type in this value. One way to solve this problem is to use a file. We can easily write a C program that stores 0x05 (again, not ‘5’) to a file (let us call it mystring), then we can run the vulnerable program (let us call it a.out) with its input being redirected to mystring; namely, we run "a.out < mystring". This way, scanf will take its input from the file mystring, instead of from the keyboard.
 
