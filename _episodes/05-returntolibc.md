@@ -91,8 +91,8 @@ Let us first compile the code and turn it into a root-owned Set-UID program.  Do
 
 ```bash
 $ gcc -fno-stack-protector -z noexecstack -o retlib retlib.c
-$ sudo chown root retlib
 $ sudo chmod 4755 retlib
+$ sudo chown root retlib
 ```
 
 ### Task 1: Finding out the addresses of libc functions
