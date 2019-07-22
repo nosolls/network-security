@@ -3,9 +3,9 @@ title: "Format String Vulnerability"
 teaching: 60
 exercises: 180
 questions:
-- "What is the format-string vulnerability?"
+- "What is the format string vulnerability?"
 - "Why is it dangerous?"
-- "What can you do to prevent this vulnerability?"
+- "What are some uses for it?"
 objectives:
 - "Follow instructions to successfully demonstrate the format-string vulnerability."
 keypoints:
