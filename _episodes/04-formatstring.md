@@ -25,7 +25,7 @@ The last consequence is very dangerous because it can allow users to modify inte
 
 In this lab, students will be given a program with a format-string vulnerability; their task is to develop a scheme to exploit the vulnerability.  In addition to the attacks, students will be guided to walk through a protection scheme that can be used to defeat this type of attacks.  Students need to evaluate whether the scheme work or not and explain why.
 
-This lab/documentation was provided by the [SEED Project](https://seedsecuritylabs.org/).
+This lab/documentation was provided by the [SEED Project](https://seedsecuritylabs.org/). There is only one container needed for this demonstration.
 
 ### Demonstration
 
