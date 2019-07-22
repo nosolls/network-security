@@ -1,7 +1,7 @@
 ---
 title: "Format String Vulnerability"
-teaching: 10
-exercises: 30
+teaching: 60
+exercises: 180
 questions:
 - "What is the format-string vulnerability?"
 - "Why is it dangerous?"
